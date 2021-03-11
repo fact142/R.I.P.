@@ -23,5 +23,11 @@
 <a href="GetFilmsFromSAKILADB_to_Combo">Get Films to combo</a>
 <br>
 <a href="GetById">Get Films by id</a>
+<br>
+<a href="CreateFilm">Add new film</a>
+<br>
+<a href="RemoveFilm">Delete film</a>
+<br>
+<a href="UpdateFilm">Update film</a>
 </body>
 </html>
