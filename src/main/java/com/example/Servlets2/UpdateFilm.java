@@ -22,14 +22,13 @@ public class UpdateFilm extends HttpServlet {
         String login = "root";
         String pswd="root";
     }
-    final int tableBorderWidth = 3;
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
-
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println(""
-                    + "<form action=UpdateFilm method=GET>"
+                    + "<form action=UpdateFilm method=POST  >"
                     + "Введите id"
                     + "<input name=" + Names.selectFilmId + ">"
                     + "<br>"
@@ -40,61 +39,19 @@ public class UpdateFilm extends HttpServlet {
                     + "<input name=" + Names.selectFilmDescription + ">"
                     + "<input type=submit name=submitNumber value=OK>"
                     + "</form>");
-
-            try {
-                int filmId = Integer.parseInt(request.getParameter(Names.selectFilmId));
-                String filmTitle = request.getParameter(Names.selectFilmTitle);
-                String filmDescription = request.getParameter(Names.selectFilmDescription);
-                System.out.println(filmTitle);
-                Class.forName("com.mysql.cj.jdbc.Driver");
-
-                try (Connection con = DriverManager.getConnection(Names.connString, Names.login, Names.pswd);
-                     PreparedStatement preparedStatement = con.prepareStatement(Names.sqlQuery);
-                ) {
-                    preparedStatement.setString(1, filmTitle);
-                    preparedStatement.setString(2, filmDescription);
-                    preparedStatement.setInt(3, filmId);
-                    int rowFilm = preparedStatement.executeUpdate();
-                    PreparedStatement preparedStatement1 = con.prepareStatement(Names.extraSQLQuery);
-                    preparedStatement1.setInt(1, filmId);
-                    ResultSet filmsResultSet = preparedStatement1.executeQuery();
-                    filmsResultSet.next();
-
-                    out.println("<table border=" + tableBorderWidth + " bgcolor=yellow>");
-                    out.println("<tr>");
-                    out.println("<td>");
-                    out.println(filmsResultSet.getString("title"));
-                    out.println("</td>");
-                    out.println("<td>");
-                    out.println(filmsResultSet.getString("description"));
-                    out.println("</td>");
-                    out.println("</tr>");
-                    out.println("</table>");
-                    filmsResultSet.close();
-                    }
-                catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-            } catch (NumberFormatException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            out.println("</body>");
-            out.println("</html>");
-
-        } catch (IOException e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
+        int filmId = Integer.parseInt(request.getParameter(Names.selectFilmId));
+        String filmTitle = request.getParameter(Names.selectFilmTitle);
+        String filmDescription = request.getParameter(Names.selectFilmDescription);
+        System.out.println(filmTitle);
+        Film film = new Film(filmId, filmTitle, filmDescription);
+        Crud.update(film);
     }
 
     @Override

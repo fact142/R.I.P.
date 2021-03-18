@@ -20,53 +20,31 @@ public class RemoveFilm extends HttpServlet {
         String pswd="root";
     }
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
 
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println(""
-                    + "<form action=RemoveFilm method=GET>"
+                    + "<form action=RemoveFilm method=POST>"
                     + "Удалить фильм с id"
                     + "<input name=" + Names.deleteFilmNumber + ">"
                     + "<input type=submit name=submitNumber value=OK>"
                     + "</form>");
-
-            try {
-                int numberOfFilmsToExtract = Integer.parseInt(request.getParameter(Names.deleteFilmNumber));
-                System.out.println(numberOfFilmsToExtract);
-                Class.forName("com.mysql.cj.jdbc.Driver");
-
-                try (Connection con = DriverManager.getConnection(Names.connString, Names.login, Names.pswd);
-                     PreparedStatement preparedStatement = con.prepareStatement(Names.sqlQuery);
-                ) {
-                    preparedStatement.setInt(1, numberOfFilmsToExtract);
-                    int filmsResultSet = preparedStatement.executeUpdate();
-
-                    out.println(filmsResultSet);
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } catch (NumberFormatException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            out.println("</body>");
-            out.println("</html>");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        processRequest(request, response);
-    }
+            response.setContentType("text/html;charset=UTF-8");
+            int id = Integer.parseInt(request.getParameter(Names.deleteFilmNumber));
+            Film film = new Film(id, "", "");
+            Crud.delete(film);
+
+        }
 
     @Override
     public String getServletInfo() {

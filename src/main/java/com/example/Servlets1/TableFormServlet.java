@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 @WebServlet("/table-form-servlet")
 public class TableFormServlet extends HttpServlet {
-    private static final Logger LOGGER = Logger.getLogger( TableServlet.class.getName());
+    private static final Logger LOGGER = Logger.getLogger( TableFormServlet.class.getName());
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
